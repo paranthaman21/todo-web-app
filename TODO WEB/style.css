@@ -1,0 +1,560 @@
+/* =========================================
+   1. CSS Variables & Themes
+   ========================================= */
+:root {
+    /* Default Theme: Ocean */
+    --primary-hue: 190;
+    --primary-color: hsl(var(--primary-hue), 100%, 50%);
+    --secondary-color: hsl(210, 100%, 60%);
+    --accent-color: #00d2ff;
+    
+    --bg-gradient-1: #3a7bd5;
+    --bg-gradient-2: #00d2ff;
+    
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text-main: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.7);
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+
+    --font-family: 'Outfit', sans-serif;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 8px;
+    
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Theme: Sunset */
+[data-theme="sunset"] {
+    --primary-hue: 10;
+    --bg-gradient-1: #ff6b6b;
+    --bg-gradient-2: #ffcc33;
+    --accent-color: #ff6b6b;
+}
+
+/* Theme: Forest */
+[data-theme="forest"] {
+    --primary-hue: 140;
+    --bg-gradient-1: #11998e;
+    --bg-gradient-2: #38ef7d;
+    --accent-color: #00ff87;
+}
+
+/* Theme: Midnight */
+[data-theme="midnight"] {
+    --primary-hue: 260;
+    --bg-gradient-1: #240b36;
+    --bg-gradient-2: #c31432;
+    --accent-color: #9d50bb;
+    --glass-bg: rgba(0, 0, 0, 0.4); /* Darker glass for midnight */
+    --text-main: #e0e0e0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1a1a1a; /* Fallback */
+    overflow-x: hidden;
+    color: var(--text-main);
+}
+
+/* =========================================
+   2. Background Animation (Mesh Gradient)
+   ========================================= */
+.background-mesh {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: #0f2027; /* Deep fallback */
+}
+
+.blob {
+    position: absolute;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: float 10s infinite alternate;
+}
+
+.blob-1 {
+    top: -10%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: var(--bg-gradient-1);
+    transition: background 1s ease;
+}
+
+.blob-2 {
+    bottom: -10%;
+    right: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: var(--bg-gradient-2);
+    animation-delay: -5s;
+    transition: background 1s ease;
+}
+
+.blob-3 {
+    top: 30%;
+    left: 40%;
+    width: 30vw;
+    height: 30vw;
+    background: var(--accent-color);
+    filter: blur(60px);
+    opacity: 0.4;
+    animation: float 15s infinite reverse;
+    transition: background 1s ease;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(50px, 50px) rotate(10deg); }
+}
+
+/* =========================================
+   3. Main App Container (Glassmorphism)
+   ========================================= */
+.app-container {
+    width: 90%;
+    max-width: 500px;
+    height: 85vh;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+/* Scrollbar styling for the container */
+.task-list::-webkit-scrollbar {
+    width: 6px;
+}
+.task-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+}
+
+/* =========================================
+   4. Header & Theme Switcher
+   ========================================= */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+.title-section h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.theme-switcher {
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.1);
+    padding: 0.5rem;
+    border-radius: 99px;
+    backdrop-filter: blur(5px);
+}
+
+.theme-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: var(--btn-color);
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.theme-btn:hover {
+    transform: scale(1.1);
+}
+
+.theme-btn.active {
+    border-color: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px var(--btn-color);
+}
+
+/* =========================================
+   5. Input Section
+   ========================================= */
+.input-section {
+    margin-bottom: 1.5rem;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(0,0,0,0.2);
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-wrapper:focus-within {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px rgba(var(--primary-hue), 100%, 50%, 0.2);
+}
+
+.input-icon {
+    margin-left: 1rem;
+    color: var(--text-muted);
+}
+
+#taskInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    padding: 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+}
+
+#taskInput::placeholder {
+    color: rgba(255,255,255,0.4);
+}
+
+.add-btn {
+    background: var(--accent-color);
+    color: white; /* Always white text for contrast on bright accent */
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: filter 0.3s, transform 0.2s;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.add-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+.add-btn span {
+    display: none; /* Hide text on small screens if needed, or show */
+}
+@media (min-width: 400px) {
+    .add-btn span { display: inline; }
+}
+
+/* =========================================
+   6. Stats & Filters
+   ========================================= */
+.stats-section {
+    margin-bottom: 1.5rem;
+}
+
+.progress-container {
+    margin-bottom: 1rem;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent-color);
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color 0.3s;
+}
+
+.filter-btn:hover {
+    color: var(--text-main);
+}
+
+.filter-btn.active {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.filter-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; /* Align with border-bottom of container */
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-color);
+    border-radius: 99px;
+    box-shadow: 0 -2px 5px var(--accent-color);
+}
+
+/* =========================================
+   7. Task List Area
+   ========================================= */
+.task-list {
+    list-style: none;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    gap: 1rem;
+    opacity: 0.6;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: var(--accent-color);
+}
+
+.task-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+    animation: slideIn 0.4s ease forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.task-item:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateX(4px);
+}
+
+.task-item.completed {
+    opacity: 0.7;
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+/* Custom Checkbox */
+.task-check-wrapper {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.task-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--accent-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.task-checkbox:checked {
+    background: var(--accent-color);
+}
+
+.task-checkbox:checked::before {
+    content: '\f00c'; /* FontAwesome Check */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: #fff; /* White check icon */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+}
+
+.task-text-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden; /* For text truncation */
+}
+
+.task-text {
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s;
+}
+
+.task-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
+    opacity: 0; /* Hidden by default, show on hover */
+    transition: opacity 0.3s;
+}
+
+.task-item:hover .task-actions {
+    opacity: 1;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.25rem;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.action-btn.delete-btn:hover {
+    color: #ff6b6b;
+    transform: scale(1.2);
+}
+
+.action-btn.edit-btn:hover {
+    color: var(--accent-color);
+    transform: scale(1.2);
+}
+
+/* When editing */
+.task-item.editing {
+    border-color: var(--accent-color);
+}
+.edit-input {
+    width: 100%;
+    background: rgba(0,0,0,0.2);
+    border: none;
+    color: var(--text-main);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+}
+
+/* =========================================
+   8. Footer
+   ========================================= */
+.app-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.text-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    transition: color 0.3s;
+}
+
+.text-btn:hover {
+    color: var(--text-main);
+    text-decoration: underline;
+}
+
+/* =========================================
+   9. Responsive Design
+   ========================================= */
+@media (max-width: 480px) {
+    .app-container {
+        width: 100%;
+        height: 100vh; /* Full screen on mobile */
+        max-width: none;
+        border-radius: 0;
+        border: none;
+    }
+
+    .title-section h1 {
+        font-size: 1.75rem;
+    }
+}
